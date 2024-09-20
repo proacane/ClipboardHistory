@@ -25,6 +25,7 @@ class DatabaseHandler : public QObject {
     void insertRecord(Type type, const QString& content);
 
     QSqlQuery getHistory();
+    QSqlQuery getHistory(Type type);
     bool clearHistory(const QRect &mainWindowGeometry);
     // 获取存储的图片数量
     int getImageRecordCount();

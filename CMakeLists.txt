@@ -32,7 +32,9 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
 )
-
+INCLUDE_DIRECTORIES(
+    ${PROJECT_SOURCE_DIR}
+)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Clipboard
@@ -47,6 +49,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         textwrapdelegate.h textwrapdelegate.cpp
         logmanager.h logmanager.cpp
         res.qrc
+
 
     )
 

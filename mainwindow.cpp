@@ -12,6 +12,7 @@
 #include <QPropertyAnimation>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QScrollBar>
 #include <QTimer>
 
 #include "./ui_mainwindow.h"
@@ -21,7 +22,8 @@
 #include "textwrapdelegate.h"
 
 MainWindow::MainWindow(QWidget* parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), _settings_dialog(new SettingDialog(this)), _is_open(true) {
+    QMainWindow(parent), ui(new Ui::MainWindow), _settings_dialog(new SettingDialog(this)), _is_open(true),
+    _cur_type(Type::_ALL) {
     ui->setupUi(this);
     setWindowTitle("Clipboard history");
     // 将窗口移动到屏幕中央
@@ -35,7 +37,6 @@ MainWindow::MainWindow(QWidget* parent) :
     model = new QSqlQueryModel(this);
     ui->clipboardHistoryTable->setWordWrap(true);
     ui->clipboardHistoryTable->setSizeAdjustPolicy(QAbstractItemView::AdjustToContents);
-    setCentralWidget(ui->clipboardHistoryTable);
 
     // 创建数据库和剪切板管理器
     dbHandler = new DatabaseHandler();
@@ -45,27 +46,27 @@ MainWindow::MainWindow(QWidget* parent) :
 
     // 初始化 ui 界面
     TextWrapDelegate* delegate = new TextWrapDelegate(ui->clipboardHistoryTable);
-    ui->clipboardHistoryTable->setItemDelegateForColumn(2, delegate);
+    ui->clipboardHistoryTable->setItemDelegateForColumn(1, delegate);
     model->setQuery(dbHandler->getHistory());
-    model->setHeaderData(1, Qt::Horizontal, tr("类型"));
-    model->setHeaderData(2, Qt::Horizontal, tr("内容"));
+    model->setHeaderData(0, Qt::Horizontal, tr("类型"));
+    model->setHeaderData(1, Qt::Horizontal, tr("内容"));
     ui->clipboardHistoryTable->setModel(model);
     ui->clipboardHistoryTable->hideColumn(0);
-    ui->clipboardHistoryTable->hideColumn(1);
-    ui->clipboardHistoryTable->hideColumn(3);
+    // ui->clipboardHistoryTable->hideColumn(1);
+    // ui->clipboardHistoryTable->hideColumn(3);
 
-    ui->clipboardHistoryTable->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+    ui->clipboardHistoryTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     ui->clipboardHistoryTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->clipboardHistoryTable->resizeColumnsToContents();
     ui->clipboardHistoryTable->resizeRowsToContents();
-    ui->clipboardHistoryTable->setColumnWidth(2, this->width() + 150);
+    ui->clipboardHistoryTable->setColumnWidth(1, this->width());
     // 隐藏行头和列头
     ui->clipboardHistoryTable->verticalHeader()->hide();
     ui->clipboardHistoryTable->horizontalHeader()->hide();
-
-    // 根据内容判断是否需要显示滚动条
-    ui->clipboardHistoryTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    ui->clipboardHistoryTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    // 滚轮平滑滚动
+    ui->clipboardHistoryTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);  // 设置为像素移动
+    QScrollBar* a = ui->clipboardHistoryTable->verticalScrollBar();  // 获取到tablewidget的滚动条
+    a->setSingleStep(15);                                            // 设置单步，值越小，下滑越慢
 
     // 连接剪切板更新信号，以刷新界面
     connect(clipboardManager, &ClipboardManager::clipboardHistoryUpdated, this, &MainWindow::updateClipboardHistoryUI);
@@ -180,7 +181,11 @@ void MainWindow::updateClipboardHistoryUI() {
     qDebug() << "Update ui---";
     // 更新界面展示
     // 更新 ui 界面
-    model->setQuery(dbHandler->getHistory());
+    if (_cur_type == Type::_ALL) {
+        model->setQuery(dbHandler->getHistory());
+    }else{
+        model->setQuery(dbHandler->getHistory(_cur_type));
+    }
 }
 
 void MainWindow::updateShortCut() {
@@ -221,8 +226,8 @@ void MainWindow::clipboardHistoryTableClicked(const QModelIndex& index) {
     Type type = static_cast<Type>(model->data(model->index(index.row(), 1)).toInt());
 
     clipboardManager->setContext(type, content);
-    qDebug() << "copied to clipboard:" << content;
-    LogManager::getInstance().writeLog(LogManager::LogType::Info,"Copy message is "+content);
+    qDebug() << "copied to clipboard:" << content << "Type: " << type;
+    LogManager::getInstance().writeLog(LogManager::LogType::Info, "Copy message is " + content);
 
     // 创建 QLabel 显示提示框
     QLabel* label = new QLabel("已复制到剪切板", this);
@@ -258,6 +263,7 @@ void MainWindow::clearHistory() {
     bool is_delete = dbHandler->clearHistory(mainWindowGeometry);
     if (is_delete) {
         LogManager::getInstance().writeLog(LogManager::LogType::Info, "remove all records in database");
+        // 显示所有数据
         updateClipboardHistoryUI();
     }
 }
@@ -294,4 +300,32 @@ void MainWindow::changeEvent(QEvent* event) {
         }
     }
     QMainWindow::changeEvent(event);
+}
+
+void MainWindow::on_btn_all_toggled(bool checked) {
+    if (checked) {
+        model->setQuery(dbHandler->getHistory());
+        _cur_type = Type::_ALL;
+    }
+}
+
+void MainWindow::on_btn_text_toggled(bool checked) {
+    if (checked) {
+        model->setQuery(dbHandler->getHistory(Type::_TEXT));
+        _cur_type = Type::_TEXT;
+    }
+}
+
+void MainWindow::on_btn_image_toggled(bool checked) {
+    if (checked) {
+        model->setQuery(dbHandler->getHistory(Type::_IMAGE));
+        _cur_type = Type::_IMAGE;
+    }
+}
+
+void MainWindow::on_btn_file_toggled(bool checked) {
+    if (checked) {
+        model->setQuery(dbHandler->getHistory(Type::_FILE));
+        _cur_type = Type::_FILE;
+    }
 }

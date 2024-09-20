@@ -2,6 +2,7 @@
 #define CONST_H
 // 剪切板获取的类型
 enum Type{
+    _ALL = 0,
     _TEXT = 1,
     _IMAGE = 2,
     _FILE = 3

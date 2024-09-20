@@ -28,13 +28,23 @@ void ClipboardManager::setContext(Type t, const QString& content) {
     _suppress_dataChangedSignal = true;
 
     // 设置剪切板内容
-    if (t == Type::_TEXT) {
+    if (t == Type::_FILE) {
+        QList<QUrl> copyFile;
+        QUrl url = QUrl::fromLocalFile(content);
+        qDebug() << "Url is " << url.toString();
+        if (url.isValid()) {
+            qDebug() << "URL is valid:" << url.toString();
+            copyFile.push_back(url);
+        } else {
+            qDebug() << "URL is not valid";
+        }
+        QMimeData* data = new QMimeData;
+        data->setUrls(copyFile);
+        m_clipboard->setMimeData(data);
+    } else if (t == Type::_TEXT) {
         m_clipboard->setText(content);
-    } else if (Type::_IMAGE) {
+    } else if (t == Type::_IMAGE) {
         m_clipboard->setImage(QImage(content));
-    } else if (Type::_FILE) {
-        // TODO 文件类型待处理
-
     }
 }
 
@@ -97,10 +107,10 @@ void ClipboardManager::saveCurrentClipboardContent() {
     }
     // 然后检查文件
     else if (mimeData->hasUrls()) {
-        // TODO 存储文件
         QList<QUrl> urls = mimeData->urls();
         foreach (const QUrl& url, urls) {
             // 每个文件的路径
+            qDebug() << "Url is " << url.toString();
             QString filePath = url.toLocalFile();
             qDebug() << "File copied:" << filePath;
             if (!filePath.isEmpty()) {

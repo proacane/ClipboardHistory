@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>650</width>
     <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>650</width>
     <height>500</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
+    <width>650</width>
     <height>500</height>
    </size>
   </property>
@@ -30,13 +30,222 @@
     <normaloff>:/res/logo.png</normaloff>:/res/logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="minimumSize">
+    <size>
+     <width>650</width>
+     <height>500</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>650</width>
+     <height>500</height>
+    </size>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="btn_all">
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>全部</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/res/all_normal.png</normaloff>
+            <normalon>:/res/all_selected.png</normalon>:/res/all_normal.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_text">
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>文本</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/res/text_normal.png</normaloff>
+            <normalon>:/res/text_selected.png</normalon>:/res/text_normal.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_image">
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>图像</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/res/image_normal.png</normaloff>
+            <normalon>:/res/image_selected.png</normalon>:/res/image_normal.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_file">
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>文件</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/res/file_normal.png</normaloff>
+            <normalon>:/res/file_selected.png</normalon>:/res/file_normal.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoExclusive">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item>
        <widget class="QTableView" name="clipboardHistoryTable">
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string>单击左键复制</string>
+        </property>
         <property name="autoFillBackground">
          <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTableView {
+    background-color: #f0f0f0;  /* 背景颜色 */
+    border: 1px solid #a0a0a0;  /* 边框 */
+    selection-background-color: #6a9fb5;  /* 选中项的背景颜色 */
+    selection-color: white;  /* 选中项的文字颜色 */
+    gridline-color: #d0d0d0;  /* 网格线颜色 */
+}
+
+QTableView::item {
+    padding: 8px;  /* 单元格内边距 */
+    font-size: 19px;  /* 字体大小 */
+    border: 1px solid transparent;  /* 默认边框透明 */
+}
+
+QTableView::item:hover {
+    background-color: #e0e0e0;  /* 鼠标悬停时的背景颜色 */
+}
+
+QTableView::item:selected {
+    background-color: #6a9fb5;  /* 选中项的背景颜色 */
+    color: white;  /* 选中项的文字颜色 */
+    border: 1px solid #4a6b7e;  /* 选中项边框颜色 */
+}
+
+QHeaderView {
+    background-color: #5a5a5a;  /* 表头背景颜色 */
+    color: white;  /* 表头文字颜色 */
+    font-weight: bold;  /* 表头字体加粗 */
+}
+
+QHeaderView::section {
+    padding: 8px;  /* 表头内边距 */
+    border: 1px solid #a0a0a0;  /* 表头边框 */
+}
+
+QScrollBar:vertical {
+    background: #f0f0f0;  /* 垂直滚动条背景 */
+    width: 12px;  /* 垂直滚动条宽度 */
+}
+
+QScrollBar::handle:vertical {
+    background: #c0c0c0;  /* 垂直滚动条滑块 */
+    min-height: 20px;  /* 滑块最小高度 */
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #b0b0b0;  /* 鼠标悬停时的滑块颜色 */
+}
+
+QScrollBar:horizontal {
+    background: #f0f0f0;  /* 水平滚动条背景 */
+    height: 12px;  /* 水平滚动条高度 */
+}
+
+QScrollBar::handle:horizontal {
+    background: #c0c0c0;  /* 水平滚动条滑块 */
+    min-width: 20px;  /* 滑块最小宽度 */
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #b0b0b0;  /* 鼠标悬停时的滑块颜色 */
+}</string>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>

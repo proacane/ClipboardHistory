@@ -26,11 +26,21 @@ class MainWindow : public QMainWindow {
   private:
     Ui::MainWindow* ui;
   private slots:
-    void updateClipboardHistoryUI();
+    void updateClipboardHistoryUI( );
     void updateShortCut();
     void clipboardHistoryTableClicked(const QModelIndex &index);
     void clearHistory();
     void setProcessAutoRun(bool flag);
+
+
+    void on_btn_all_toggled(bool checked);
+
+    void on_btn_text_toggled(bool checked);
+
+    void on_btn_image_toggled(bool checked);
+
+    void on_btn_file_toggled(bool checked);
+
 private:
     DatabaseHandler* dbHandler;
     ClipboardManager* clipboardManager;
@@ -40,6 +50,7 @@ private:
     SettingDialog* _settings_dialog;
     QHotkey *_open_shortcut;
     bool _is_open;
+    Type _cur_type;
     // QWidget interface
   protected:
     virtual void closeEvent(QCloseEvent* event) override;
@@ -48,5 +59,7 @@ private:
     // QWidget interface
 protected:
     virtual void changeEvent(QEvent *) override;
+
+
 };
 #endif  // MAINWINDOW_H

@@ -49,8 +49,22 @@ void DatabaseHandler::insertRecord(Type type, const QString& content) {
 }
 
 QSqlQuery DatabaseHandler::getHistory() {
+    // TODO 频繁查数据库太卡，做缓存
     QSqlQuery query;
-    query.prepare("SELECT * FROM clipboard_history ORDER BY timestamp DESC LIMIT :total");
+    query.prepare("SELECT type,content FROM clipboard_history ORDER BY timestamp DESC LIMIT :total");
+    query.bindValue(":total", ConfigMgr::getInstance().value(ConfigGroup::RecordCount, "totalCount").toInt());
+
+    if (!query.exec()) {
+        qDebug() << "Query execution error:" << query.lastError().text();
+    }
+
+    return query;
+}
+
+QSqlQuery DatabaseHandler::getHistory(Type type) {
+    QSqlQuery query;
+    query.prepare("SELECT type,content FROM clipboard_history WHERE type = :type ORDER BY timestamp DESC LIMIT :total");
+    query.bindValue(":type", type);
     query.bindValue(":total", ConfigMgr::getInstance().value(ConfigGroup::RecordCount, "totalCount").toInt());
 
     if (!query.exec()) {
@@ -78,22 +92,22 @@ bool DatabaseHandler::clearHistory(const QRect& mainWindowGeometry) {
         QSqlQuery delete_all("DELETE FROM clipboard_history");
         delete_all.exec();
         // 清除图片目录
-        QDir dir(QCoreApplication::applicationDirPath()+"/images");
+        QDir dir(QCoreApplication::applicationDirPath() + "/images");
 
         // 检查目录是否存在
         if (!dir.exists()) {
             qWarning() << "Directory does not exist:" << dir;
         }
 
-        // 获取目录下的所有文件
-        QFileInfoList fileList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+        // 获取目录下的所有图片
+        QFileInfoList imageList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
 
-        // 遍历文件列表并删除文件
-        for (const QFileInfo& fileInfo : fileList) {
-            if (!QFile::remove(fileInfo.absoluteFilePath())) {
-                qWarning() << "Failed to remove file:" << fileInfo.absoluteFilePath();
+        // 遍历图片列表并删除图片
+        for (const QFileInfo& imageInfo : imageList) {
+            if (!QFile::remove(imageInfo.absoluteFilePath())) {
+                qWarning() << "Failed to remove file:" << imageInfo.absoluteFilePath();
             } else {
-                qDebug() << "Removed file:" << fileInfo.absoluteFilePath();
+                qDebug() << "Removed file:" << imageInfo.absoluteFilePath();
             }
         }
         // 刷新界面
@@ -105,7 +119,7 @@ bool DatabaseHandler::clearHistory(const QRect& mainWindowGeometry) {
 }
 
 int DatabaseHandler::getImageRecordCount() {
-    QSqlQuery query("SELECT COUNT(*) FROM clipboard_history WHERE type = 2");
+    QSqlQuery query("SELECT COUNT(content) FROM clipboard_history WHERE type = 2");
     int rowCount = 0;
     if (query.exec() && query.next()) {
         rowCount = query.value(0).toInt();

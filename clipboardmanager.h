@@ -17,21 +17,22 @@ class ClipboardManager : public QObject {
     Q_OBJECT
   public:
     ClipboardManager(QClipboard* clipboard, DatabaseHandler* dbHandler, QObject* parent = nullptr);
-      // 加载剪切板历史记录
-      void loadClipboardHistory();
-    void setContext(Type t,const QString& content);
+    // 加载剪切板历史记录
+    void loadClipboardHistory();
+    void setContext(Type t, const QString& content);
   private slots:
-      void onClipboardDataChanged();
+    void onClipboardDataChanged();
+
   private:
     QString saveImageToFile(const QImage& image);
-      // 是否为从界面点击复制的内容
-      bool _suppress_dataChangedSignal;
+    // 是否为从界面点击复制的内容
+    bool _suppress_dataChangedSignal;
     QClipboard* m_clipboard;
     DatabaseHandler* m_dbHandler;
     // 保存当前剪切板内容到数据库
     void saveCurrentClipboardContent();
     void cleanupOldImages();
-signals:
+  signals:
     void clipboardHistoryUpdated();
 };
 
