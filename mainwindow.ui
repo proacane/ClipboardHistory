@@ -42,7 +42,7 @@
      <height>500</height>
     </size>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -174,6 +174,18 @@
       </item>
       <item>
        <widget class="QTableView" name="clipboardHistoryTable">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>650</width>
+          <height>500</height>
+         </size>
+        </property>
         <property name="cursor" stdset="0">
          <cursorShape>ArrowCursor</cursorShape>
         </property>
@@ -184,74 +196,13 @@
          <bool>true</bool>
         </property>
         <property name="styleSheet">
-         <string notr="true">QTableView {
-    background-color: #f0f0f0;  /* 背景颜色 */
-    border: 1px solid #a0a0a0;  /* 边框 */
-    selection-background-color: #6a9fb5;  /* 选中项的背景颜色 */
-    selection-color: white;  /* 选中项的文字颜色 */
-    gridline-color: #d0d0d0;  /* 网格线颜色 */
-}
-
-QTableView::item {
-    padding: 8px;  /* 单元格内边距 */
-    font-size: 19px;  /* 字体大小 */
-    border: 1px solid transparent;  /* 默认边框透明 */
-}
-
-QTableView::item:hover {
-    background-color: #e0e0e0;  /* 鼠标悬停时的背景颜色 */
-}
-
-QTableView::item:selected {
-    background-color: #6a9fb5;  /* 选中项的背景颜色 */
-    color: white;  /* 选中项的文字颜色 */
-    border: 1px solid #4a6b7e;  /* 选中项边框颜色 */
-}
-
-QHeaderView {
-    background-color: #5a5a5a;  /* 表头背景颜色 */
-    color: white;  /* 表头文字颜色 */
-    font-weight: bold;  /* 表头字体加粗 */
-}
-
-QHeaderView::section {
-    padding: 8px;  /* 表头内边距 */
-    border: 1px solid #a0a0a0;  /* 表头边框 */
-}
-
-QScrollBar:vertical {
-    background: #f0f0f0;  /* 垂直滚动条背景 */
-    width: 12px;  /* 垂直滚动条宽度 */
-}
-
-QScrollBar::handle:vertical {
-    background: #c0c0c0;  /* 垂直滚动条滑块 */
-    min-height: 20px;  /* 滑块最小高度 */
-}
-
-QScrollBar::handle:vertical:hover {
-    background: #b0b0b0;  /* 鼠标悬停时的滑块颜色 */
-}
-
-QScrollBar:horizontal {
-    background: #f0f0f0;  /* 水平滚动条背景 */
-    height: 12px;  /* 水平滚动条高度 */
-}
-
-QScrollBar::handle:horizontal {
-    background: #c0c0c0;  /* 水平滚动条滑块 */
-    min-width: 20px;  /* 滑块最小宽度 */
-}
-
-QScrollBar::handle:horizontal:hover {
-    background: #b0b0b0;  /* 鼠标悬停时的滑块颜色 */
-}</string>
+         <string notr="true">QTableView { background-color: #1e1e1e; color: #f0f0f0;font-size:13px;gridline-color: gray; }</string>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
+         <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
         </property>
         <property name="showGrid">
          <bool>true</bool>

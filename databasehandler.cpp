@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QMessageBox>
+#include <QtConcurrent/QtConcurrent>
 
 #include "configmgr.h"
 #include "logmanager.h"
@@ -46,10 +47,17 @@ void DatabaseHandler::insertRecord(Type type, const QString& content) {
                                                "Failed to insert record: " + query.lastError().text());
         }
     }
+    // 创建一个后台线程执行数据库清理
+    QThread* thread = new QThread;
+    CleanUpWorker* worker = new CleanUpWorker("clipboard_history.db");
+    worker->moveToThread(thread);
+    connect(thread, &QThread::started, worker, &CleanUpWorker::cleanDatabase);
+    connect(worker, &CleanUpWorker::finished, thread, &QThread::quit);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
 }
 
 QSqlQuery DatabaseHandler::getHistory() {
-    // TODO 频繁查数据库太卡，做缓存
     QSqlQuery query;
     query.prepare("SELECT type,content FROM clipboard_history ORDER BY timestamp DESC LIMIT :total");
     query.bindValue(":total", ConfigMgr::getInstance().value(ConfigGroup::RecordCount, "totalCount").toInt());
@@ -168,4 +176,47 @@ void DatabaseHandler::deleteRecord(const QString& content) {
     } else {
         qDebug() << "Record deleted for content:" << content;
     }
+}
+
+void CleanUpWorker::cleanDatabase() {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "cleaner");
+    db.setDatabaseName(dbName);  // 这里设置数据库文件路径
+    if (!db.open()) {
+        qDebug() << "Failed to open database:" << db.lastError();
+        emit finished();
+        return;
+    }
+
+    QSqlQuery query(db);  // 使用新打开的数据库连接
+    query.prepare("SELECT COUNT(*) FROM clipboard_history");
+
+    if (!query.exec() || !query.next()) {
+        qDebug() << "Failed to count records: " << query.lastError();
+        LogManager::getInstance().writeLog(LogManager::LogType::Warning,
+                                           "Failed to count records:" + query.lastError().text());
+        emit finished();  // 操作完成，发出信号
+        return;
+    }
+
+    int totalRows = query.value(0).toInt();
+    int recordLimit = ConfigMgr::getInstance().value(ConfigGroup::RecordCount, "totalCount").toInt();
+
+    while (totalRows > recordLimit) {
+        // 删除最早的一条数据
+        query.prepare("DELETE FROM clipboard_history WHERE timestamp = (SELECT MIN(timestamp) FROM clipboard_history)");
+        if (!query.exec()) {
+            qDebug() << "Failed to delete oldest record: " << query.lastError();
+            LogManager::getInstance().writeLog(LogManager::LogType::Warning,
+                                               "Failed to delete oldest record:" + query.lastError().text());
+        } else {
+            qDebug() << "Oldest record deleted to maintain record limit.";
+            LogManager::getInstance().writeLog(LogManager::LogType::Warning,
+                                               "Oldest record deleted to maintain record limit.");
+        }
+        totalRows--;
+    }
+
+    db.close();  // 清理数据库连接
+    QSqlDatabase::removeDatabase("clean");
+    emit finished();  // 操作完成，发出信号
 }

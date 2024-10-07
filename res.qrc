@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/logo.png</file>
         <file>res/all_normal.png</file>
         <file>res/all_selected.png</file>
         <file>res/file_normal.png</file>
@@ -9,5 +8,6 @@
         <file>res/image_selected.png</file>
         <file>res/text_normal.png</file>
         <file>res/text_selected.png</file>
+        <file>res/logo.png</file>
     </qresource>
 </RCC>

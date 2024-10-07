@@ -18,7 +18,7 @@
 class DatabaseHandler : public QObject {
     Q_OBJECT
   public:
-    DatabaseHandler(const QString& dbPath = "clipboard_history.db",QObject *parent = nullptr);
+    DatabaseHandler(const QString& dbPath = "clipboard_history.db", QObject* parent = nullptr);
 
     void createTable();
 
@@ -26,7 +26,7 @@ class DatabaseHandler : public QObject {
 
     QSqlQuery getHistory();
     QSqlQuery getHistory(Type type);
-    bool clearHistory(const QRect &mainWindowGeometry);
+    bool clearHistory(const QRect& mainWindowGeometry);
     // 获取存储的图片数量
     int getImageRecordCount();
     /**
@@ -35,9 +35,25 @@ class DatabaseHandler : public QObject {
      * @return
      */
     QStringList getOldestImagePaths(int limit);
-    void deleteRecord(const QString &content);
-private:
+    void deleteRecord(const QString& content);
+
+  private:
     QSqlDatabase db;
+};
+
+class CleanUpWorker : public QObject {
+    Q_OBJECT
+  public:
+    explicit CleanUpWorker(const QString& dbName, QObject* parent = nullptr) : QObject(parent), dbName(dbName) {}
+
+  public slots:
+    void cleanDatabase();
+
+  signals:
+    void finished();
+
+  private:
+    QString dbName;  // 用于存储数据库名称
 };
 
 #endif  // DATABASEHANDLER_H
