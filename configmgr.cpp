@@ -3,37 +3,60 @@
 #include "logmanager.h"
 
 #include <QCoreApplication>
-
+#include"const.h"
 ConfigMgr& ConfigMgr::getInstance() {
     static ConfigMgr instance;
     return instance;
 }
 
-ConfigMgr::ConfigMgr() : _settings(QCoreApplication::applicationDirPath() + "/config.ini", QSettings::IniFormat) {
+
+ConfigMgr::ConfigMgr() : _settings([&]() -> QString {
+        QDir dir(ConfigPath);
+        if (!dir.exists()) {
+            if (!dir.mkpath(ConfigPath)) {
+                qCritical() << "Failed to create configuration directory:" << ConfigPath;
+            }
+        }
+        return ConfigPath + "/config.ini";
+    }(), QSettings::IniFormat) {
+
     _settings.beginGroup("Shortcuts");
+
     _cache["open"] = _settings.value("open", "error").toString();
-    // _cache["theme"] = _settings.value("theme", "light").toString();
+    // 快捷键
     qDebug() << "Loaded shortcut: open = " << _cache["open"];
     _settings.endGroup();
 
     _settings.beginGroup("AutoRun");
+    _settings.setValue("flag",false);
     _cache["autorun"] = _settings.value("flag", "error").toString();
-    qDebug()<<"Auto run: "<<_cache["autorun"];
+
     _settings.endGroup();
 
     _settings.beginGroup("FirstTime");
+    _settings.setValue("flag",true);
     _cache["FirstTime"] = _settings.value("flag", "error").toString();
-    qDebug()<<"First time: "<<_cache["FirstTime"];
+
     _settings.endGroup();
 
     _settings.beginGroup("RecordCount");
+    _settings.setValue("imageCount",10);
     _cache["imageCount"]= _settings.value("imageCount",10).toString();
-    qDebug()<<"Image max count: "<<_cache["imageCount"];
+
     _cache["totalCount"] = _settings.value("totalCount",50).toString();
-    qDebug()<<"Total max count: "<<_cache["totalCount"];
+    _settings.setValue("totalCount",50);
+
     _settings.endGroup();
-    QMap<QString, QString>::const_iterator it;
-    for (it = _cache.constBegin(); it != _cache.constEnd(); ++it) {
+
+    _settings.beginGroup("DataPath");
+    _settings.setValue("path",ConfigPath);
+    _cache["dataPath"] = _settings.value("path").toString();
+    _settings.endGroup();
+    qDebug()<<"Data path: " <<_cache["dataPath"];
+
+
+    for (auto it = _cache.cbegin(); it != _cache.cend(); ++it) {
+         qDebug() << "Key:" << it.key() << ", Value:" << it.value();
         LogManager::getInstance().writeLog(LogManager::LogType::Info, "Key: " + it.key() + " Value: " + it.value());
     }
 }

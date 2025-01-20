@@ -6,7 +6,12 @@
 
 #include "configmgr.h"
 #include "logmanager.h"
-DatabaseHandler::DatabaseHandler(const QString& dbPath, QObject* parent) : QObject(parent) {
+DatabaseHandler::DatabaseHandler( QObject* parent) : QObject(parent) {
+    QString configPath = ConfigMgr::getInstance().value(ConfigGroup::DataPath,"path");
+
+     QString dbPath = configPath + "/clipboard_history.db";
+
+    qDebug()<<"Database path: " <<dbPath;
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(dbPath);
     if (!db.open()) {
@@ -100,7 +105,7 @@ bool DatabaseHandler::clearHistory(const QRect& mainWindowGeometry) {
         QSqlQuery delete_all("DELETE FROM clipboard_history");
         delete_all.exec();
         // 清除图片目录
-        QDir dir(QCoreApplication::applicationDirPath() + "/images");
+        QDir dir(ConfigPath + "/images");
 
         // 检查目录是否存在
         if (!dir.exists()) {

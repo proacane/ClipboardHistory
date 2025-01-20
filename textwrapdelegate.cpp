@@ -1,5 +1,8 @@
 #include "textwrapdelegate.h"
 
+#include "configmgr.h"
+#include "const.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileIconProvider>
@@ -19,9 +22,11 @@ QSize TextWrapDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
         QFileInfo fileInfo(content);
 
         // 检查文件是否属于当前目录下的 "images" 文件夹
-        QDir imageDir(QCoreApplication::applicationDirPath() + "/images");
+        QDir imageDir(ConfigPath+ "/images");
         if (fileInfo.absolutePath() == imageDir.absolutePath()) {
-            return QSize(150, 200);  // 增加单元格大小，如 150x150
+            int height = image.height();
+            int width = image.width();
+            return QSize(height, width);
         }
     }
     QTextDocument doc;
@@ -54,7 +59,7 @@ void TextWrapDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opti
         QFileInfo fileInfo(content);
 
         // 检查文件是否属于当前目录下的 "images" 文件夹
-        QDir imageDir(QCoreApplication::applicationDirPath() + "/images");
+        QDir imageDir(ConfigPath+ "/images");
         if (fileInfo.absolutePath() == imageDir.absolutePath()) {
             // 计算缩放后的图片尺寸，保持宽高比
             QSize imageSize = image.size();

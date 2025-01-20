@@ -1,0 +1,27 @@
+# ninja log v6
+21	985	7590572932162421	QHotkey/qhotkey_autogen/timestamp	4d5d9ea74405ad9b
+21	985	7590572932162421	E:/Code/ClipboardHistory/build/QHotkey/qhotkey_autogen/mocs_compilation.cpp	4d5d9ea74405ad9b
+1001	2900	7590572933450170	QHotkey/CMakeFiles/qhotkey.dir/QHotkey/qhotkey.cpp.obj	2c77d7713f1519bf
+20	357	7590599643593036	Clipboard_autogen/timestamp	dcbbd6d2ea984e0c
+21	985	7590572932162421	QHotkey/qhotkey_autogen/mocs_compilation.cpp	4d5d9ea74405ad9b
+21	985	7590572932162421	E:/Code/ClipboardHistory/build/QHotkey/qhotkey_autogen/timestamp	4d5d9ea74405ad9b
+1013	3378	7590572933582176	QHotkey/CMakeFiles/qhotkey.dir/QHotkey/qhotkey_win.cpp.obj	1d5a0271e9d4fe78
+989	2453	7590572933335267	QHotkey/CMakeFiles/qhotkey.dir/qhotkey_autogen/mocs_compilation.cpp.obj	79ca926a7a27f47f
+3379	3638	7590572957243310	QHotkey/libqhotkey.a	c13d996049d7e7b5
+4578	4717	7590572970521513	Clipboard_autogen/EWIEGA46WW/qrc_res.cpp	6ea8e620b8222306
+20	357	7590599643593036	Clipboard_autogen/mocs_compilation.cpp	dcbbd6d2ea984e0c
+20	357	7590599643593036	E:/Code/ClipboardHistory/build/Clipboard_autogen/timestamp	dcbbd6d2ea984e0c
+20	357	7590599643593036	E:/Code/ClipboardHistory/build/Clipboard_autogen/mocs_compilation.cpp	dcbbd6d2ea984e0c
+4578	4717	7590572970521513	E:/Code/ClipboardHistory/build/Clipboard_autogen/EWIEGA46WW/qrc_res.cpp	6ea8e620b8222306
+4839	6239	7590572971839811	CMakeFiles/Clipboard.dir/Clipboard_autogen/EWIEGA46WW/qrc_res.cpp.obj	80e6d68ccbdf58f2
+393	1867	7590599647322017	CMakeFiles/Clipboard.dir/quitmessagebox.cpp.obj	189f62e0f68adadc
+975	2932	7590599283042147	CMakeFiles/Clipboard.dir/logmanager.cpp.obj	45da56386f15e4fa
+872	2953	7590599282008980	CMakeFiles/Clipboard.dir/main.cpp.obj	420112274712e4c3
+862	3126	7590599281912857	CMakeFiles/Clipboard.dir/Clipboard_autogen/mocs_compilation.cpp.obj	6651a6d02833a524
+406	2294	7590599647456141	CMakeFiles/Clipboard.dir/settingdialog.cpp.obj	72d695e6c1b873d8
+948	3248	7590599282773524	CMakeFiles/Clipboard.dir/configmgr.cpp.obj	761556621a52bda6
+381	2277	7590599647202553	CMakeFiles/Clipboard.dir/clipboardmanager.cpp.obj	d2e9030f22281dd4
+418	2512	7590599647575371	CMakeFiles/Clipboard.dir/textwrapdelegate.cpp.obj	a991300b5ef980d7
+360	2724	7590599646992711	CMakeFiles/Clipboard.dir/mainwindow.cpp.obj	d66cd06c593736cf
+370	3363	7590599647088420	CMakeFiles/Clipboard.dir/databasehandler.cpp.obj	268180a60bc310a8
+3363	4058	7590599677024649	Clipboard.exe	d9775e1384b802fe

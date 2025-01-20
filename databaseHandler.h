@@ -18,7 +18,7 @@
 class DatabaseHandler : public QObject {
     Q_OBJECT
   public:
-    DatabaseHandler(const QString& dbPath = "clipboard_history.db", QObject* parent = nullptr);
+    DatabaseHandler( QObject* parent = nullptr);
 
     void createTable();
 

@@ -61,7 +61,7 @@ void ClipboardManager::onClipboardDataChanged() {
 }
 
 QString ClipboardManager::saveImageToFile(const QImage& image) {
-    QDir dir(QCoreApplication::applicationDirPath() + "/images");
+    QDir dir(ConfigPath + "/images");
     if (!dir.exists()) {
         dir.mkpath(".");
     }

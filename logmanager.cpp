@@ -1,12 +1,16 @@
 #include "logmanager.h"
+#include"const.h"
 
 LogManager::LogManager() {
     // 确保日志目录存在
-    logDirectory = QDir::currentPath() + "/log";
+    logDirectory = ConfigPath + "/log";
     QDir dir(logDirectory);
     if (!dir.exists()) {
-        dir.mkpath(logDirectory);
+        if(!dir.mkpath(logDirectory)){
+            qCritical()<<"Log folder create failed";
+        }
     }
+    qDebug()<<"LogManager init succeed";
 }
 
 LogManager::~LogManager() {
@@ -30,12 +34,14 @@ void LogManager::writeLog(LogType type, const QString& message) {
     QString logFileName = getLogFileName(type);
     QFile file(logFileName);
 
+    qDebug()<<logFileName;
     if (file.open(QIODevice::Append | QIODevice::Text)) {
+        qDebug()<<"Writing ..";
         QTextStream out(&file);
 
         // 写入时间戳和日志信息
         QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
-        out<<"[" << timeStamp << ": " << message << "]\n";
+        out<<"[" << timeStamp << "] : " << message << "\n";
 
         file.close();
     }
